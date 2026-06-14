@@ -74,7 +74,15 @@ INVENTORY_CRON_SECRET=<same-secret-as-nuxt>
 
 ## Manual trigger
 
-You can manually trigger the same low-stock check with:
+Open the Worker URL in a browser:
+
+```txt
+https://<worker-url>/
+```
+
+Enter `INVENTORY_CRON_SECRET`, then click the manual low-stock check button.
+
+Or trigger it with curl:
 
 ```powershell
 curl -X POST https://<worker-url>/run -H "Authorization: Bearer <INVENTORY_CRON_SECRET>"
