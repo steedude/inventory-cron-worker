@@ -1,0 +1,2 @@
+INVENTORY_APP_URL=https://inventory-omega-bay.vercel.app
+INVENTORY_CRON_SECRET=replace-with-a-long-random-secret
