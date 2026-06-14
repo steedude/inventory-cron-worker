@@ -2,6 +2,7 @@
   "name": "inventory-cron-worker",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-14",
+  "keep_vars": true,
   "vars": {
     "INVENTORY_APP_URL": "https://inventory-omega-bay.vercel.app",
   },
