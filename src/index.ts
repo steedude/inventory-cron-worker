@@ -3,12 +3,14 @@ export interface Env {
   INVENTORY_CRON_SECRET: string;
 }
 
+type LowStockRunMode = "manual" | "scheduled";
+
 const LOW_STOCK_CHECK_PATH = "/api/inventory/low-stock-check";
 const MAX_ERROR_BODY_LENGTH = 500;
 
 export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext) {
-    ctx.waitUntil(checkLowStock(env));
+    ctx.waitUntil(checkLowStock(env, "scheduled"));
   },
 
   async fetch(request: Request, env: Env) {
@@ -26,7 +28,7 @@ export default {
       }
 
       try {
-        const result = await checkLowStock(env);
+        const result = await checkLowStock(env, "manual");
         return Response.json({ ok: true, result });
       }
       catch (error) {
@@ -42,7 +44,7 @@ export default {
   },
 } satisfies ExportedHandler<Env>;
 
-async function checkLowStock(env: Env): Promise<unknown> {
+async function checkLowStock(env: Env, mode: LowStockRunMode): Promise<unknown> {
   validateEnv(env);
 
   const appUrl = normalizeBaseUrl(env.INVENTORY_APP_URL);
@@ -51,6 +53,7 @@ async function checkLowStock(env: Env): Promise<unknown> {
     headers: {
       "Authorization": `Bearer ${env.INVENTORY_CRON_SECRET}`,
       "x-cron-secret": env.INVENTORY_CRON_SECRET,
+      "x-low-stock-run-mode": mode,
     },
   });
 
